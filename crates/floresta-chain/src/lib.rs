@@ -38,6 +38,8 @@ pub use pruned_utreexo::fee_estimation::FeeEstimator;
 pub use pruned_utreexo::fee_estimation::FeeRateEntry;
 pub use pruned_utreexo::fee_estimation::FeeRateStore;
 #[cfg(feature = "flat-chainstore")]
+pub use pruned_utreexo::fee_rate_file::FeeRateFile;
+#[cfg(feature = "flat-chainstore")]
 pub use pruned_utreexo::flat_chain_store::*;
 pub use pruned_utreexo::udata::*;
 pub use pruned_utreexo::utxo_data::*;

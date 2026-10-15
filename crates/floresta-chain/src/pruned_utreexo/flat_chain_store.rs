@@ -630,6 +630,7 @@ pub struct FlatChainStore {
 
     /// A LRU cache for the last n blocks we've touched
     cache: Mutex<LruCache<BlockHash, DiskBlockHeader>>,
+
     /// Warnings accumulated when writes fail; surfaced via [`ChainStore::get_warnings`].
     pending_warnings: Vec<ChainStoreWarning>,
 }

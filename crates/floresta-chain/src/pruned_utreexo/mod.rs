@@ -19,6 +19,8 @@ pub mod error;
 pub mod consensus;
 pub mod fee_estimation;
 #[cfg(feature = "flat-chainstore")]
+pub mod fee_rate_file;
+#[cfg(feature = "flat-chainstore")]
 pub mod flat_chain_store;
 pub mod merkle;
 pub mod partial_chain;
@@ -39,6 +41,8 @@ use rustreexo::proof::Proof;
 use rustreexo::stump::Stump;
 
 use self::chainstore::ChainStoreWarning;
+#[cfg(feature = "flat-chainstore")]
+pub use self::fee_rate_file::FeeRateFile;
 use self::partial_chain::PartialChainState;
 use crate::BlockConsumer;
 use crate::BlockchainError;
