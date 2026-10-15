@@ -156,8 +156,6 @@ pub struct ChainStateInner<PersistedState: ChainStore> {
     /// If a module just wants pass in a channel, `Sender` implements [BlockConsumer], and can
     /// be used during subscription (just keep the `Receiver` side.
     subscribers: Vec<Arc<dyn BlockConsumer>>,
-    /// Fee estimation for 1, 10 and 20 blocks
-    fee_estimation: (f64, f64, f64),
     /// What is our current IBD state?
     ibd: IBDState,
     /// Parameters for the chain and functions that verify the chain.
@@ -667,7 +665,6 @@ impl<PersistedState: ChainStore> ChainState<PersistedState> {
                     alternative_tips: Vec::new(),
                 },
                 subscribers: Vec::new(),
-                fee_estimation: (1_f64, 1_f64, 1_f64),
                 ibd: IBDState::HeadersSync,
                 consensus: Consensus { parameters },
                 assume_valid,
@@ -828,7 +825,6 @@ impl<PersistedState: ChainStore> ChainState<PersistedState> {
             acc,
             best_block,
             chainstore,
-            fee_estimation: (1_f64, 1_f64, 1_f64),
             subscribers: Vec::new(),
             ibd: IBDState::HeadersSync,
             consensus: Consensus {
@@ -1239,17 +1235,6 @@ impl<PersistedState: ChainStore> BlockchainInterface for ChainState<PersistedSta
         Ok(inner.best_block.depth)
     }
 
-    fn estimate_fee(&self, target: usize) -> Result<f64, Self::Error> {
-        let inner = read_lock!(self);
-        if target == 1 {
-            Ok(inner.fee_estimation.0)
-        } else if target == 10 {
-            Ok(inner.fee_estimation.1)
-        } else {
-            Ok(inner.fee_estimation.2)
-        }
-    }
-
     fn get_block(&self, _hash: &BlockHash) -> Result<Block, Self::Error> {
         unimplemented!("This chainstate doesn't hold full blocks")
     }
@@ -1609,7 +1594,6 @@ impl<T: ChainStore> TryFrom<ChainStateBuilder<T>> for ChainState<T> {
             assume_valid: builder.assume_valid(),
             ibd: builder.ibd_state(),
             subscribers: Vec::new(),
-            fee_estimation: (1_f64, 1_f64, 1_f64),
             consensus: Consensus {
                 parameters: builder.chain_params()?,
             },
